@@ -17,3 +17,8 @@ GROUP BY ALL;
 -- MAGIC ## Next steps
 -- MAGIC - Change the settings of your pipeline to include this notebook (source code-> Add this notebook)
 -- MAGIC - Start the pipeline again
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Create another Gold table using the same method

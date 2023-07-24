@@ -1,7 +1,4 @@
 # Databricks notebook source
-# import sys, os
-# sys.path.append(os.path.abspath('/Repos/yas.mokri@databricks.com/tfnsw_bootcamp/'))
-
 import dlt
 from pyspark.sql.protobuf.functions import from_protobuf
 from pyspark.sql.functions import col, explode
@@ -40,20 +37,18 @@ def bronze_view():
 
     proto_df = df_bronze.select(col("timestamp").alias("ingest_time") , from_protobuf(df_bronze.data, "FeedMessage", descFilePath=descriptor_file).alias("proto"))
 
-    unpacked_df = proto_df.select('ingest_time', 'proto.*').select('ingest_time', explode(col('entity')).alias("entity"))
+    unpacked_df = proto_df. ## fill in the gaps 
 
-    unpacked_df = unpacked_df.select('ingest_time', "entity", "entity.*").select('ingest_time', "entity", "id", "alert","vehicle.*")
-
-    return unpacked_df
+    return unpacked_df # returning a dataframe
 
 # COMMAND ----------
 
 @dlt.table()
 def dlt_silver():
 
-  unpacked_df = dlt.read_stream("bronze_view")
-
-  return unpacked_df
+  unpacked_df = ## fill in the gap
+  
+  return unpacked_df # returning a dataframe
 
 # COMMAND ----------
 
@@ -78,5 +73,10 @@ dlt.apply_changes(
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Let's do this in SQL (open the gold notebook from the repo with SQL as the language)
+# MAGIC ## What if we want to change to SCD type 1 instead?
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Let's continue this in SQL (open the gold notebook from the repo with SQL as the language)
 # MAGIC
