@@ -56,7 +56,7 @@ proto_df.schema
 unpacked_df = proto_df.select('ingest_time', 'proto.*').select('ingest_time', explode(col('entity')).alias("entity"))
 
 # hands on exercise- continue by unpacking some more fields like entity then vehicle, use a pattern similar proto_df.select('proto.*')
-unpacked_df = unpacked_df.select('ingest_time', "entity", "entity.*")
+unpacked_df = unpacked_df.select ##---- fill in the rest
 
 display(unpacked_df)
 
@@ -93,26 +93,8 @@ print(silver_table_name)
 
 # COMMAND ----------
 
-unpacked_df.write.mode('append').option("mergeSchema", "true").saveAsTable(silver_table_name)
+unpacked_df.write ##---- fill in the rest
 
-
-# COMMAND ----------
-
-# MAGIC %md 
-# MAGIC ##DML
-# MAGIC Update congestion_level from UNKNOWN_CONGESTION_LEVEL to another value for one or some of the rows in the table
-# MAGIC Write a SQL query to do this either by using %sql or spark.sql(sql_query)
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC SELECT id, congestion_level FROM $silver_table WHERE id in (1,2,10);
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC UPDATE $silver_table SET congestion_level="VERY_KNOWN_CONGESTION_LEVEL" WHERE id in (1,2,10) ;
-# MAGIC SELECT id, congestion_level FROM $silver_table WHERE id in (1,2,10);
 
 # COMMAND ----------
 
@@ -159,3 +141,67 @@ unpacked_df.write.mode('append').option("mergeSchema", "true").saveAsTable(silve
 
 # MAGIC %sql
 # MAGIC SELECT * from $silver_table WHERE stop_id IS  NULL
+
+# COMMAND ----------
+
+# MAGIC %md 
+# MAGIC ##DML
+# MAGIC Update congestion_level from UNKNOWN_CONGESTION_LEVEL to another value for one or some of the rows in the table
+# MAGIC Write a SQL query to do this either by using %sql or spark.sql(sql_query)
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC SELECT id, congestion_level FROM $silver_table WHERE id in (1,2,10);
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC UPDATE $silver_table SET congestion_level="VERY_KNOWN_CONGESTION_LEVEL" WHERE id in (1,2,10) ;
+# MAGIC SELECT id, congestion_level FROM $silver_table WHERE id in (1,2,10);
+
+# COMMAND ----------
+
+# MAGIC %md 
+# MAGIC #let's check the history of the table
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC describe history $silver_table
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC describe detail $silver_table
+
+# COMMAND ----------
+
+# MAGIC
+# MAGIC %ls /dbfs/user/hive/warehouse/yas_mokri_bootcamp.db/silver_train_data
+# MAGIC
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC SELECT id, congestion_level FROM $silver_table  VERSION AS OF -- specify the version before the latest change  WHERE id in (1,2,10) 
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC SELECT id, congestion_level FROM $silver_table  VERSION AS OF -- specify the laest version WHERE id in (1,2,10)
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC RESTORE $silver_table VERSION AS OF 1
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC SELECT id, congestion_level FROM $silver_table  WHERE id in (1,2,10)
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC describe history $silver_table
